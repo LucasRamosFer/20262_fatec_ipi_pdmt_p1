@@ -1,0 +1,4 @@
+//chaves de acesso: os valores verdadeiors nunca vão para um commit 
+//'COLOQUE_SUA_CHAVE_AQUI'
+export const GEOAPIFY_KEY = 'COLOQUE_SUA_CHAVE_AQUI'
+export const PRIMEUI_LICENSE = 'COLOQUE_SUA_CHAVE_AQUI'

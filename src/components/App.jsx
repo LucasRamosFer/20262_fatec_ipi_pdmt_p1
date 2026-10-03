@@ -20,7 +20,10 @@ const App = () => {
         <div>
             {/* Cabeçalho */}
             <div>
+                
+                
                 <h1 className="titulo">
+                    <i class="pi pi-map-marker " style={{color: 'red'}}></i>
                     RolêRadar
                 </h1>
                 <p style={estiloSubtitulo}>
