@@ -1,3 +1,6 @@
+import Cartao from "./Cartao"
+import Creditos from "./Creditos"
+
 const App = () => {
     const estiloSubtitulo = {
         marginTop: 8,
@@ -29,9 +32,14 @@ const App = () => {
                 <p style={estiloSubtitulo}>
                     Descubra o que existe perto de você
                 </p>
+                <Creditos />
             </div>
 
-
+            <Cartao 
+                cabecalho={'Teste'}>
+                <p>Conteúdo do cartão</p>
+            </Cartao>
+            
 
             <div>
                 {/* Rodapé */}
