@@ -3,6 +3,8 @@ import Cartao from "./Cartao"
 import Creditos from "./Creditos"
 import Loading from "./Loading"
 import MeuPonto from "./MeuPonto"
+import geoapifyClient from "../utils/geoapifyClient"
+import { Button } from "@primereact/ui/button"
 
 class App extends React.Component {
     state = {
@@ -55,6 +57,24 @@ class App extends React.Component {
 
     }
 
+    onBuscaRealizada = async (categoria, raio) => {
+        const { latitude, longitude } = this.state
+        try {
+            const resposta = await geoapifyClient.get('places', {
+                params: {
+                    categories: categoria,
+                    filter: `circle:${longitude},${latitude},${raio}`,
+                    bias: `proximity:${longitude},${latitude}`,
+                    limit: 20
+                }
+            })
+            console.log(resposta.data.features)
+
+        } catch (erro) {
+            console.error('Erro ao buscar locais:', erro)
+        }
+    }
+
     render() {
 
         return (
@@ -73,31 +93,40 @@ class App extends React.Component {
                     </p>
 
                     <Creditos />
-
-
-                    <div>
-                        {
-                            (!this.state.latitude && !this.state.mensagemDeErro) ?
-                                <Loading
-                                    mensagem=" Aguardando permissão de localização..."
-                                />
-                                :
-                                this.state.mensagemDeErro ?
-                                    <p className="text-center">
-                                        {this.state.mensagemDeErro}
-                                    </p>
-                                    :
-                                    <Cartao cabecalho="Você está aqui">
-                                        <MeuPonto
-                                            latitude={this.state.latitude}
-                                            longitude={this.state.longitude}
-                                            horarioLocalizacao={this.state.horarioLocalizacao}
-                                            onAtualizar={this.obterLocalizacao}
-                                        />
-                                    </Cartao>
-                        }
-                    </div>
                 </div>
+
+
+                <div className="flex justify-content-center">
+                    {
+                        (!this.state.latitude && !this.state.mensagemDeErro) ?
+                            <Loading
+                                mensagem=" Aguardando permissão de localização..."
+                            />
+                            :
+                            this.state.mensagemDeErro ?
+                                <p className="text-center">
+                                    {this.state.mensagemDeErro}
+                                </p>
+                                :
+                                <Cartao cabecalho="Você está aqui">
+                                    <MeuPonto
+                                        latitude={this.state.latitude}
+                                        longitude={this.state.longitude}
+                                        horarioLocalizacao={this.state.horarioLocalizacao}
+                                        onAtualizar={this.obterLocalizacao}
+                                    />
+                                </Cartao>
+                    }
+                </div>
+                <div className="flex justify-content-center gap-4 mt-3 mb-3" >
+                    <Button
+                        className="p-3 border-1 border-round cursor-pointer bg-primary text-white"
+                        onClick={() => this.onBuscaRealizada('catering.cafe', 1000)}>
+                        <i className="pi pi-search mr-2"></i>
+                        Testar busca
+                    </Button>
+                </div>
+
 
 
                 <div>
