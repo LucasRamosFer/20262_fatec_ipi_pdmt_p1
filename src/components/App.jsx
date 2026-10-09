@@ -4,15 +4,16 @@ import Creditos from "./Creditos"
 import Loading from "./Loading"
 import MeuPonto from "./MeuPonto"
 import geoapifyClient from "../utils/geoapifyClient"
-import { Button } from "@primereact/ui/button"
 import Busca from "./Busca"
+import ListaLugares from "./ListaLugares"
 
 class App extends React.Component {
     state = {
         latitude: null,
         longitude: null,
         horarioLocalizacao: null,
-        mensagemDeErro: null
+        mensagemDeErro: null,
+        lugares: [],
     }
 
     componentDidMount() {
@@ -69,7 +70,7 @@ class App extends React.Component {
                     limit: 20
                 }
             })
-            console.log(resposta.data.features)
+            this.setState({ lugares: resposta.data.features }, () => console.log('Lugares no state:', this.state.lugares))
 
         } catch (erro) {
             console.error('Erro ao buscar locais:', erro)
@@ -80,9 +81,9 @@ class App extends React.Component {
 
         return (
 
-            <div>
+            <div className="grid">
                 {/* Cabeçalho */}
-                <div>
+                <div className="col-12">
 
 
                     <h1 className="titulo">
@@ -96,39 +97,47 @@ class App extends React.Component {
                     <Creditos />
                 </div>
 
+                <div className="col-6 ">
 
-                <div className="flex justify-content-center">
-                    {
-                        (!this.state.latitude && !this.state.mensagemDeErro) ?
-                            <Loading
-                                mensagem=" Aguardando permissão de localização..."
-                            />
-                            :
-                            this.state.mensagemDeErro ?
-                                <p className="text-center">
-                                    {this.state.mensagemDeErro}
-                                </p>
+                    <div className="flex justify-content-center">
+                        {
+                            (!this.state.latitude && !this.state.mensagemDeErro) ?
+                                <Loading
+                                    mensagem=" Aguardando permissão de localização..."
+                                />
                                 :
-                                <Cartao cabecalho="Você está aqui">
-                                    <MeuPonto
-                                        latitude={this.state.latitude}
-                                        longitude={this.state.longitude}
-                                        horarioLocalizacao={this.state.horarioLocalizacao}
-                                        onAtualizar={this.obterLocalizacao}
-                                    />
-                                </Cartao>
-                    }
+                                this.state.mensagemDeErro ?
+                                    <p className="text-center">
+                                        {this.state.mensagemDeErro}
+                                    </p>
+                                    :
+                                    <Cartao cabecalho="Você está aqui">
+                                        <MeuPonto
+                                            latitude={this.state.latitude}
+                                            longitude={this.state.longitude}
+                                            horarioLocalizacao={this.state.horarioLocalizacao}
+                                            onAtualizar={this.obterLocalizacao}
+                                        />
+                                    </Cartao>
+                        }
+                    </div>
+                    <div className="flex justify-content-center gap-4 mt-3 mb-3 " >
+                        <Cartao cabecalho="O que você procura?">
+                            <Busca onBuscaRealizada={this.onBuscaRealizada} />
+                        </Cartao>
+
+                    </div>
                 </div>
-                <div className="flex justify-content-center gap-4 mt-3 mb-3" >
-                    <Cartao cabecalho= "O que você procura?">
-                        <Busca onBuscaRealizada={this.onBuscaRealizada} />
-                    </Cartao>
 
+                <div className="col-6">
+                        <ListaLugares 
+                            lugares = {this.state.lugares}
+                        />
                 </div>
 
 
 
-                <div>
+                <div className="col-12">
                     {/* Rodapé */}
                     <footer style={{ textAlign: 'center', color: '#7C7C7C' }}>
                         RolêRadar © {this.obterAno()}
