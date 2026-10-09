@@ -5,6 +5,7 @@ import Loading from "./Loading"
 import MeuPonto from "./MeuPonto"
 import geoapifyClient from "../utils/geoapifyClient"
 import { Button } from "@primereact/ui/button"
+import Busca from "./Busca"
 
 class App extends React.Component {
     state = {
@@ -119,12 +120,10 @@ class App extends React.Component {
                     }
                 </div>
                 <div className="flex justify-content-center gap-4 mt-3 mb-3" >
-                    <Button
-                        className="p-3 border-1 border-round cursor-pointer bg-primary text-white"
-                        onClick={() => this.onBuscaRealizada('catering.cafe', 1000)}>
-                        <i className="pi pi-search mr-2"></i>
-                        Testar busca
-                    </Button>
+                    <Cartao cabecalho= "O que você procura?">
+                        <Busca onBuscaRealizada={this.onBuscaRealizada} />
+                    </Cartao>
+
                 </div>
 
 
